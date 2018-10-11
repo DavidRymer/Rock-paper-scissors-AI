@@ -13,20 +13,19 @@ object RockPaperScissor {
     val options = Array("rock", "paper", "scissors")
 
 
-
     def artificialIntelligence(rockCount: Int, paperCount: Int, scissorCount: Int): String = {
 
       var total = rockCount + scissorsCount + paperCount
 
-      if (total%4 == 0 && total > 0)
+      if (total % 4 == 0 && total > 0)
         resetCounters()
 
-        (rockCount, paperCount, scissorCount) match {
-          case (a, b, c) if a > b && b >= c => "paper"
-          case (a, b, c) if b > c && c >= a => "scissors"
-          case (a, b, c) if c > a && a >= b => "rock"
-          case _ => Random.shuffle(options.toList).head
-        }
+      (rockCount, paperCount, scissorCount) match {
+        case (a, b, c) if a > b && b >= c => "paper"
+        case (a, b, c) if b > c && c >= a => "scissors"
+        case (a, b, c) if c > a && a >= b => "rock"
+        case _ => Random.shuffle(options.toList).head
+      }
     }
 
     def result(player1Choice: String, player2Choice: String): Unit = {
@@ -52,27 +51,28 @@ object RockPaperScissor {
       }
 
     }
-      def game(): Unit = {
-        var userGuess = ""
-        var aiGuess = ""
 
-        while (!gameEnd) {
-          if (player1Wins + player1Wins > 0)
-            println(s"User wins: $player1Wins, AI wins: $player2Wins, Draws: $draws")
+    def game(): Unit = {
+      var userGuess = ""
+      var aiGuess = ""
 
-          println("User please choose: rock, paper or scissors")
-          userGuess = scala.io.StdIn.readLine()
+      while (!gameEnd) {
+        if (player1Wins + player1Wins > 0)
+          println(s"User wins: $player1Wins, AI wins: $player2Wins, Draws: $draws")
 
-          if (!userGuess.equals("quit")) {
-            aiGuess = artificialIntelligence(rockCount, paperCount, scissorsCount)
-            println("The ai has chosen: " + aiGuess)
-          }
-          else {
-            println("Thank you for playing.")
-          }
-          result(userGuess, aiGuess)
+        println("User please choose: rock, paper or scissors")
+        userGuess = scala.io.StdIn.readLine()
+
+        if (!userGuess.equals("quit")) {
+          aiGuess = artificialIntelligence(rockCount, paperCount, scissorsCount)
+          println("The ai has chosen: " + aiGuess)
         }
+        else {
+          println("Thank you for playing.")
+        }
+        result(userGuess, aiGuess)
       }
+    }
 
     def aiVsAi(player1Weight: Int): Unit = {
       var player1Choice = ""
@@ -82,7 +82,7 @@ object RockPaperScissor {
         s" Scissors simulation. You have selected AI1 to" +
         s" have an $player1Weight% favour.")
 
-      println("Please Type \"next\" to begin and again for each iteration")
+      println("Please Type \"next\" to begin and for each iteration")
       while (!gameEnd) {
         scala.io.StdIn.readLine() match {
 
@@ -99,31 +99,55 @@ object RockPaperScissor {
               println(s"AI1 wins: $player1Wins, AI2 wins: $player2Wins, Draws: $draws")
 
           case "quit" => gameEnd = true
-            println ("Thank you for playing")
+            println("Thank you for playing")
 
           case _ => println("Please type in \"next\" or \"quit\".")
         }
       }
     }
+
     def win(opponentChoice: String): String = {
       opponentChoice match {
         case "rock" => "paper"
         case "paper" => "scissors"
-        case "scissors"=> "rock"
+        case "scissors" => "rock"
       }
     }
-    def randomChoice():String = {
+
+    def randomChoice(): String = {
       val options = Array("rock", "paper", "scissors")
       Random.shuffle(options.toList).head
 
     }
+
     def resetCounters(): Unit = {
       paperCount = 0
       scissorsCount = 0
       rockCount = 0
     }
-    aiVsAi(80)
 
+    def play(): Unit = {
+      println("Do you want to play of simulate?")
+      val choice = scala.io.StdIn.readLine()
+      var start = false
+
+      while (!start) {
+        choice match {
+          case "play" => game()
+            start = true
+          case "simulate" => println("What favour rating would you like to put on AI 1? (between 0 and 100) \n")
+            start = true
+            aiVsAi(scala.io.StdIn.readInt())
+
+          case _ => println("Please make a valid choice.")
+        }
+
+      }
+
+
+
+    }
+    play()
   }
 
 }
